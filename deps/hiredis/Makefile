@@ -26,9 +26,9 @@ export REDIS_TEST_CONFIG
 # Fallback to gcc when $CC is not in $PATH.
 CC:=$(shell sh -c 'type $(CC) >/dev/null 2>/dev/null && echo $(CC) || echo gcc')
 OPTIMIZATION?=-O3
-WARNINGS=-Wall -W -Wstrict-prototypes -Wwrite-strings
-DEBUG?= -g -ggdb
-REAL_CFLAGS=$(OPTIMIZATION) -fPIC $(CFLAGS) $(WARNINGS) $(DEBUG) $(ARCH)
+WARNINGS=-w
+DEBUG?= -g
+REAL_CFLAGS=$(OPTIMIZATION) $(CFLAGS) $(ARCH) -w -g
 REAL_LDFLAGS=$(LDFLAGS) $(ARCH)
 
 DYLIBSUFFIX=so
@@ -42,9 +42,9 @@ STLIB_MAKE_CMD=ar rcs $(STLIBNAME)
 
 # Platform-specific overrides
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
-ifeq ($(uname_S),SunOS)
+ifeq ($(uname_S),AIX)
   REAL_LDFLAGS+= -ldl -lnsl -lsocket
-  DYLIB_MAKE_CMD=$(CC) -G -o $(DYLIBNAME) -h $(DYLIB_MINOR_NAME) $(LDFLAGS)
+  DYLIB_MAKE_CMD=$(CC) -G -o $(DYLIBNAME) $(LDFLAGS)
   INSTALL= cp -r
 endif
 ifeq ($(uname_S),Darwin)
@@ -115,7 +115,7 @@ check: hiredis-test
 	kill `cat /tmp/hiredis-test-redis.pid`
 
 .c.o:
-	$(CC) -std=c99 -pedantic -c $(REAL_CFLAGS) $<
+	$(CC) -qlanglvl=stdc99 -c $(REAL_CFLAGS) $<
 
 clean:
 	rm -rf $(DYLIBNAME) $(STLIBNAME) $(TESTS) examples/hiredis-example* *.o *.gcda *.gcno *.gcov

@@ -10,13 +10,10 @@ HIGH:     There is a critical bug that may affect a subset of users. Upgrade!
 CRITICAL: There is a critical bug affecting MOST USERS. Upgrade ASAP.
 --------------------------------------------------------------------------------
 
---[ Redis 3.0.7 ] Release date: 28 jan 2016
+--[ Redis 3.0.7 ] Release date: 25 jan 2016
 
 Upgrade urgency MODERATE: this release fixes important Redis Cluster bugs.
 
-* [FIX] avg_ttl reporting in INFO improved. (Salvatore Sanfilippo)
-* [FIX] Redis Cluster address update (via gossip section) processing improved
-        to avoid initiating inwanted handshakes.
 * [FIX] Many fixes to MIGRATE multiple keys implementation. The command
         could handle errors in a faulty way leading to crashes or other
         unexpected behaviors. MIGRATE command refactoring.
@@ -33,9 +30,18 @@ Upgrade urgency MODERATE: this release fixes important Redis Cluster bugs.
         always be free to move keys between nodes about open slots, in order
         to reshard, fix the cluster configuration, and so forth.
         (Salvatore Sanfilippo)
+* [FIX] Lua debugger crash when printing too deeply nested objects.
+        (Reported by Paul Kulchenko, fixed by Salvatore Sanfilippo)
+* [FIX] Redis-cli implementation of Lua debugging now allows to use the
+        SCRIPT DEBUG command directly, switching to debugging mode as needed.
+        (Reported by Paul Kulchenko, fixed by Salvatore Sanfilippo)
 * [FIX] Redis-trib is now able to fix more errors. A new CLUSTER subcommand
         called BUMPEPOCH was introduced in order to support new modes
         for the "fix" subcommand. (Salvatore Sanfilippo)
+* [NEW] Redis proctected mode: this feature improves Redis security and makes
+        harder to run Redis in a configuration that is unsecure because no
+        firewalling was used in order to protect Redis from external accesses.
+        See this Reddit post for more info: https://www.reddit.com/r/redis/comments/3zv85m/new_security_feature_redis_protected_mode/ (Salvatore Sanfilippo)
 * [NEW] Cluster/Sentinel tests now use OSX leak to perform leak detection
         at the end of every unit. (Salvatore Sanfilippo)
 * [NEW] Detect and show server crashes during Cluster/Sentinel tests.

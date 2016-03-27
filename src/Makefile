@@ -18,13 +18,13 @@ OPTIMIZATION?=-O2
 DEPENDENCY_TARGETS=hiredis linenoise lua
 
 # Default settings
-STD=-std=c99 -pedantic
-WARN=-Wall -W
+STD=-qlanglvl=stdc99
+WARN=-w
 OPT=$(OPTIMIZATION)
 
-PREFIX?=/usr/local
+PREFIX=$(HOME)/local
 INSTALL_BIN=$(PREFIX)/bin
-INSTALL=install
+INSTALL=cp -rf
 
 # Default allocator
 ifeq ($(uname_S),Linux)
@@ -52,7 +52,7 @@ endif
 FINAL_CFLAGS=$(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(REDIS_CFLAGS)
 FINAL_LDFLAGS=$(LDFLAGS) $(REDIS_LDFLAGS) $(DEBUG)
 FINAL_LIBS=-lm
-DEBUG=-g -ggdb
+DEBUG=-g
 
 ifeq ($(uname_S),SunOS)
 	# SunOS
@@ -66,7 +66,7 @@ else
 ifeq ($(uname_S),AIX)
         # AIX
         FINAL_LDFLAGS+= -Wl,-bexpall
-        FINAL_LIBS+= -pthread -lcrypt -lbsd
+        FINAL_LIBS+= -lpthread -lcrypt -lbsd
 
 else
 	# All the other OSes (notably Linux)
